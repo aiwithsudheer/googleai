@@ -26,6 +26,41 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8; /* slate-400 */
         }
+        
+        /* Card expansion animations */
+        .card-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        
+        .card-content.collapsed {
+            max-height: 0;
+        }
+        
+        .card-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .tile-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tile-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
@@ -38,397 +73,658 @@
             <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 pb-2">
                 Google's AI Ecosystem
             </h1>
-            <p class="text-slate-500 mt-4 text-base max-w-3xl mx-auto">
-                Ever got confused with different google apps and models, where to go for what, what are usable, what is available today?
+            <p class="text-slate-500 mt-4 text-base max-w-4xl mx-auto">
+                If you've ever found yourself confused by Google's sprawling AI ecosystem—what's the difference between Gemini and AI Studio? What can NotebookLM really do?—you're not alone. The sheer number of projects, coupled with the hype and common myths, can make it difficult to know where to go for what.
             </p>
-             <p class="text-slate-500 mt-2 text-base max-w-3xl mx-auto">
-                Lets try to understand what they can do and debunk few common assumptions on what I cant do.
+            <p class="text-slate-500 mt-2 text-base max-w-4xl mx-auto">
+                To cut through the noise, I've spent considerable time personally trying out all of these features. This guide is my concise field guide, breaking down 14 of Google's key AI tools. For each one, you'll find a straightforward look at what it is, its most useful features, and its current limitations, based on my hands-on experience.
             </p>
         </header>
 
+        <!-- Search Bar -->
+        <div class="mb-6 text-center">
+            <input type="text" id="searchInput" placeholder="Search by name or tags..." class="w-full max-w-md px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
         <!-- Grid for AI Tool Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div class="grid grid-cols-1 gap-4 max-w-4xl mx-auto">
 
             <!-- Card 1: Google NotebookLM -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Google NotebookLM</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full">Web & Mobile App</span>
-                        <span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2.5 py-1 rounded-full">Note Taker</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A personal research assistant designed to help you synthesize information and consolidate your learning.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Add over 200 sources, from PDFs and website URLs to YouTube videos.</li>
-                                <li>Chat with your sources to extract information and insights (similar to RAG).</li>
-                                <li>Generate a podcast-style dialogue between two hosts based on your material.</li>
-                                <li>Create useful outputs like timelines, study guides, and FAQ documents.</li>
-                                <li>Summarize entire sources and ask specific questions about the content.</li>
-                                <li>Define and customize the AI's conversational style.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="notebooklm.png" alt="Google NotebookLM" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Google NotebookLM</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2 py-0.5 rounded-full">Web & Mobile App</span>
+                                        <span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2 py-0.5 rounded-full">Note Taker</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Research and Note taking tool</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It cannot access the internet for general knowledge; it is strictly limited to your provided sources.</li>
-                                <li>It lacks a text-to-speech feature to read content aloud.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A personal research assistant designed to help you synthesize information and consolidate your learning.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Add over 200 sources, from PDFs and website URLs to YouTube videos.</li>
+                                    <li>Chat with your sources to extract information and insights (similar to RAG).</li>
+                                    <li>Generate a podcast-style dialogue between two hosts based on your material.</li>
+                                    <li>Create useful outputs like timelines, study guides, and FAQ documents.</li>
+                                    <li>Summarize entire sources and ask specific questions about the content.</li>
+                                    <li>Define and customize the AI's conversational style.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It cannot access the internet for general knowledge; it is strictly limited to your provided sources.</li>
+                                    <li>It lacks a text-to-speech feature to read content aloud.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 2: Gemini -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Gemini</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full">Web & Mobile App</span>
-                        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full">Chatbot</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A versatile, general-purpose conversational AI, similar to ChatGPT.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Generate a wide range of content, including text, video, and software code.</li>
-                                <li>Utilize the "Canvas" experience to instantly preview generated code.</li>
-                                <li>Perform in-depth research on a variety of topics.</li>
-                                <li>Ground its responses by uploading and referencing your own documents.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="google-gemini-icon.png" alt="Gemini" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Gemini</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2 py-0.5 rounded-full">Web & Mobile App</span>
+                                        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2 py-0.5 rounded-full">Chatbot</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">General Purpose Chatbot</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It cannot directly edit an existing image. However, you can describe the desired changes, and it will attempt to generate a new, modified image.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A versatile, general-purpose conversational AI, similar to ChatGPT.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Generate a wide range of content, including text, video, and software code.</li>
+                                    <li>Utilize the "Canvas" experience to instantly preview generated code.</li>
+                                    <li>Perform in-depth research on a variety of topics.</li>
+                                    <li>Ground its responses by uploading and referencing your own documents.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It cannot directly edit an existing image. However, you can describe the desired changes, and it will attempt to generate a new, modified image.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 3: Google AI Studio -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Google AI Studio</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-1 rounded-full">Web App</span>
-                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-1 rounded-full">Prototyping</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A comprehensive, web-based platform for prototyping with Google's generative AI models.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Build and test conversational agents similar to Gemini.</li>
-                                <li>Generate multimodal content, including audio, video, text, and images.</li>
-                                <li>Facilitate the creation of audio-to-audio dialogues.</li>
-                                <li>Allows for screen sharing during conversational interactions.</li>
-                                <li>Build simple applications using pre-made templates or starting from scratch.</li>
-                                <li>Provides a library of prompt templates to get started quickly.</li>
-                                <li>Easily obtain API keys for integrating Gemini models into your own projects.</li>
-                                <li>Access advanced settings for tool calling, structured output, safety, and grounding.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="aistudio.png" alt="Google AI Studio" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Google AI Studio</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-0.5 rounded-full">Web App</span>
+                                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-0.5 rounded-full">Prototyping</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Build with Gemini</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It does not have the capability to perform automated browser actions.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A comprehensive, web-based platform for prototyping with Google's generative AI models.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Build and test conversational agents similar to Gemini.</li>
+                                    <li>Generate multimodal content, including audio, video, text, and images.</li>
+                                    <li>Facilitate the creation of audio-to-audio dialogues.</li>
+                                    <li>Allows for screen sharing during conversational interactions.</li>
+                                    <li>Build simple applications using pre-made templates or starting from scratch.</li>
+                                    <li>Provides a library of prompt templates to get started quickly.</li>
+                                    <li>Easily obtain API keys for integrating Gemini models into your own projects.</li>
+                                    <li>Access advanced settings for tool calling, structured output, safety, and grounding.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It does not have the capability to perform automated browser actions.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 4: Gemini Live -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Gemini Live</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full">Mobile App</span>
-                        <span class="bg-rose-100 text-rose-800 text-xs font-semibold px-2.5 py-1 rounded-full">Audio/Video Chat</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An interactive, real-time audio and video conversation with an AI chatbot.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Engage in a real-time, fluid conversation.</li>
-                                <li>Stream your screen for interactive assistance.</li>
-                                <li>Read documents aloud to you.</li>
-                                <li>Use your camera to show what's around you and ask questions.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="gemini_live.jpeg" alt="Gemini Live" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Gemini Live</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2 py-0.5 rounded-full">Mobile App</span>
+                                        <span class="bg-rose-100 text-rose-800 text-xs font-semibold px-2 py-0.5 rounded-full">Audio/Video Chat</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Realtime audio/video chat</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It is not a direct mobile equivalent of the developer-focused Google AI Studio.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An interactive, real-time audio and video conversation with an AI chatbot.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Engage in a real-time, fluid conversation.</li>
+                                    <li>Stream your screen for interactive assistance.</li>
+                                    <li>Read documents aloud to you.</li>
+                                    <li>Use your camera to show what's around you and ask questions.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It is not a direct mobile equivalent of the developer-focused Google AI Studio.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 5: Google Labs -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Google Labs</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-1 rounded-full">Web App</span>
-                        <span class="bg-pink-100 text-pink-800 text-xs font-semibold px-2.5 py-1 rounded-full">Experimental</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A platform for trying out early-stage, experimental features from Google.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li><strong>Whisk:</strong> Create videos from images.</li>
-                                <li><strong>Flow:</strong> Automate the video creation process for potentially full-length videos.</li>
-                                <li><strong>Doppl:</strong> Virtually try on clothing and accessories.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="google_labs.png" alt="Google Labs" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Google Labs</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-0.5 rounded-full">Web App</span>
+                                        <span class="bg-pink-100 text-pink-800 text-xs font-semibold px-2 py-0.5 rounded-full">Experimental</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Experimental AI features</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It is not a platform for creating new AI models.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A platform for trying out early-stage, experimental features from Google.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li><strong>Whisk:</strong> Create videos from images.</li>
+                                    <li><strong>Flow:</strong> Automate the video creation process for potentially full-length videos.</li>
+                                    <li><strong>Doppl:</strong> Virtually try on clothing and accessories.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It is not a platform for creating new AI models.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 6: Google Vertex AI Agent Builder -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Google Vertex AI Agent Builder</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-1 rounded-full">Web App (GCP)</span>
-                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-1 rounded-full">Agent Builder</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A low-code/no-code platform on Google Cloud for building enterprise-grade AI agents.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Offers numerous tool integrations for enterprise systems.</li>
-                                <li>Includes an "Agent Engine" to run production-level agents at scale.</li>
-                                <li>Provides an "Agent Space" which acts as a registry for enterprise agents.</li>
-                                <li>Features an "Agent Garden" with a collection of ready-made agents.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="vai_agent_builder.png" alt="Google Vertex AI Agent Builder" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Google Vertex AI Agent Builder</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-0.5 rounded-full">Web App (GCP)</span>
+                                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2 py-0.5 rounded-full">Agent Builder</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Low code/No Code Agent building platform</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Does not allow for deploying agents using only natural language commands.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A low-code/no-code platform on Google Cloud for building enterprise-grade AI agents.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Offers numerous tool integrations for enterprise systems.</li>
+                                    <li>Includes an "Agent Engine" to run production-level agents at scale.</li>
+                                    <li>Provides an "Agent Space" which acts as a registry for enterprise agents.</li>
+                                    <li>Features an "Agent Garden" with a collection of ready-made agents.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Does not allow for deploying agents using only natural language commands.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 7: Google ADK -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Google ADK</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-1 rounded-full">Agentic Package</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An Agent Development Kit (ADK) for building complex agentic systems.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Develop sophisticated multi-agent systems using code.</li>
-                                <li>Integrates with MCP (Multi-platform Control) and tool calling.</li>
-                                <li>Provides built-in session management and memory for agents.</li>
-                                <li>Offers authentication, a lightweight UI, and an agent API out of the box.</li>
-                                <li>Includes an Agent-to-Agent (A2A) protocol for inter-agent communication.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="agent-development-kit.png" alt="Google ADK" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Google ADK</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded-full">Agentic Package</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Development Kit for building agents</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It does not come with a library of readily available, pre-built agents.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An Agent Development Kit (ADK) for building complex agentic systems.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Develop sophisticated multi-agent systems using code.</li>
+                                    <li>Integrates with MCP (Multi-platform Control) and tool calling.</li>
+                                    <li>Provides built-in session management and memory for agents.</li>
+                                    <li>Offers authentication, a lightweight UI, and an agent API out of the box.</li>
+                                    <li>Includes an Agent-to-Agent (A2A) protocol for inter-agent communication.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It does not come with a library of readily available, pre-built agents.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 8: Gemini for Chrome -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Gemini for Chrome</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full">Extension</span>
-                        <span class="bg-fuchsia-100 text-fuchsia-800 text-xs font-semibold px-2.5 py-1 rounded-full">Browser Assistant</span>
-                    </div>
-                     <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An AI-powered assistant integrated directly into the Chrome browser.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Provides assistance without needing to switch tabs.</li>
-                                <li>Can directly access and analyze the content of the current page.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="gemini_in_chrome.jpg" alt="Gemini for Chrome" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Gemini for Chrome</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full">Extension</span>
+                                        <span class="bg-fuchsia-100 text-fuchsia-800 text-xs font-semibold px-2 py-0.5 rounded-full">Browser Assistant</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">In Browser AI Assistant</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Lacks the full capabilities of advanced browser agents like OpenAI's Operator.</li>
-                                <li>Cannot yet perform browser actions (like clicking or typing) on the user's behalf.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An AI-powered assistant integrated directly into the Chrome browser.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Provides assistance without needing to switch tabs.</li>
+                                    <li>Can directly access and analyze the content of the current page.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Lacks the full capabilities of advanced browser agents like OpenAI's Operator.</li>
+                                    <li>Cannot yet perform browser actions (like clicking or typing) on the user's behalf.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 9: Project Mariner -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Project Mariner</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-pink-100 text-pink-800 text-xs font-semibold px-2.5 py-1 rounded-full">Agent</span>
-                        <span class="bg-fuchsia-100 text-fuchsia-800 text-xs font-semibold px-2.5 py-1 rounded-full">Browser Agent</span>
-                    </div>
-                     <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A next-generation browser agent focused on human-agent interaction.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Automate complex, multi-step tasks across different websites.</li>
-                                <li>Intended to match the capabilities of agents like OpenAI's Operator.</li>
-                                <li>Will feature native integrations with all Google applications.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="mrainer.png" alt="Project Mariner" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Project Mariner</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-pink-100 text-pink-800 text-xs font-semibold px-2 py-0.5 rounded-full">Agent</span>
+                                        <span class="bg-fuchsia-100 text-fuchsia-800 text-xs font-semibold px-2 py-0.5 rounded-full">Browser Agent</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Complete browser use agent</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It is not yet generally available (GA) and is limited to US users with the Google One AI Premium plan (formerly Ultra).</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A next-generation browser agent focused on human-agent interaction.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Automate complex, multi-step tasks across different websites.</li>
+                                    <li>Intended to match the capabilities of agents like OpenAI's Operator.</li>
+                                    <li>Will feature native integrations with all Google applications.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It is not yet generally available (GA) and is limited to US users with the Google One AI Premium plan (formerly Ultra).</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 10: Gemma Models -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Gemma Models</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-lime-100 text-lime-800 text-xs font-semibold px-2.5 py-1 rounded-full">Model</span>
-                    </div>
-                     <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A family of low-latency, multimodal language models designed for specific problems.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Offers a range of low-latency models for developers to build applications.</li>
-                                <li>Includes specialized open-source models like Sign Gemma (sign language) and Med Gemma (medical data).</li>
-                                <li>Available on platforms like Hugging Face (<a href="https://huggingface.co/collections/google/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">https://huggingface.co/collections/google/</a>).</li>
-                                <li>Can be used within Google AI Studio for experimentation.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="gemma.jpg" alt="Gemma Models" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Gemma Models</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-lime-100 text-lime-800 text-xs font-semibold px-2 py-0.5 rounded-full">Model</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Open source, specialized AI models</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>They are foundational models, not general-purpose chatbots.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A family of low-latency, multimodal language models designed for specific problems.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Offers a range of low-latency models for developers to build applications.</li>
+                                    <li>Includes specialized open-source models like Sign Gemma (sign language) and Med Gemma (medical data).</li>
+                                    <li>Available on platforms like Hugging Face (<a href="https://huggingface.co/collections/google/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">https://huggingface.co/collections/google/</a>).</li>
+                                    <li>Can be used within Google AI Studio for experimentation.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>They are foundational models, not general-purpose chatbots.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 11: Gemini in all google apps -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Gemini in all google apps</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full">Web & Mobile Apps</span>
-                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full">Extension</span>
-                    </div>
-                     <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An integrated extension that brings Gemini's power into all Google apps.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Leverage Gemini models within daily apps like Gmail, Drive, YouTube, and Photos.</li>
-                                <li>Now also available for use directly within Google Colab notebooks.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="google.png" alt="Gemini in all google apps" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Gemini in all google apps</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2 py-0.5 rounded-full">Web & Mobile Apps</span>
+                                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full">Extension</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">AI integrated across Google apps</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Cannot perform actions without explicit user permissions and inputs.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An integrated extension that brings Gemini's power into all Google apps.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Leverage Gemini models within daily apps like Gmail, Drive, YouTube, and Photos.</li>
+                                    <li>Now also available for use directly within Google Colab notebooks.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Cannot perform actions without explicit user permissions and inputs.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 12: Google AI mode -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Google AI mode</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-fuchsia-100 text-fuchsia-800 text-xs font-semibold px-2.5 py-1 rounded-full">Browser Native Feature</span>
-                    </div>
-                     <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>The AI-powered conversational search feature within the main Google Search tab.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Provides a conversational search experience with follow-up questions.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="aimode.jpeg" alt="Google AI mode" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Google AI mode</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-fuchsia-100 text-fuchsia-800 text-xs font-semibold px-2 py-0.5 rounded-full">Browser Native Feature</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Conversational AI search</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It does not remember conversations across different tabs or windows.</li>
-                                <li>It is not a full-fledged agentic browser.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>The AI-powered conversational search feature within the main Google Search tab.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Provides a conversational search experience with follow-up questions.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It does not remember conversations across different tabs or windows.</li>
+                                    <li>It is not a full-fledged agentic browser.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Card 13: Firebase Studio -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Firebase Studio</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-1 rounded-full">Web App</span>
-                    </div>
-                     <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A web-based platform that helps you build full-stack applications with AI assistance.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Import an existing repository or create a new app from scratch.</li>
-                                <li>Supports writing code in multiple programming languages.</li>
-                                <li>Offers a "Canvas" experience for live previews (more capable than Gemini's HTML-only canvas).</li>
-                                <li>Publish your applications directly from the platform.</li>
-                                <li>The "Code view" opens a complete online VS Code editor.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="firebase_studio.png" alt="Firebase Studio" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Firebase Studio</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-0.5 rounded-full">Web App</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Build full apps from natural language</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It is not a general-purpose IDE code assistant.</li>
-                                <li>It is not an assistant bot for Firebase-specific questions.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>A web-based platform that helps you build full-stack applications with AI assistance.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Import an existing repository or create a new app from scratch.</li>
+                                    <li>Supports writing code in multiple programming languages.</li>
+                                    <li>Offers a "Canvas" experience for live previews (more capable than Gemini's HTML-only canvas).</li>
+                                    <li>Publish your applications directly from the platform.</li>
+                                    <li>The "Code view" opens a complete online VS Code editor.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It is not a general-purpose IDE code assistant.</li>
+                                    <li>It is not an assistant bot for Firebase-specific questions.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Card 14: Gemini Code Assist -->
-            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Gemini Code Assist</h2>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full">Extension</span>
-                        <span class="bg-cyan-100 text-cyan-800 text-xs font-semibold px-2.5 py-1 rounded-full">Code Assistant</span>
-                    </div>
-                    <div class="space-y-3 text-slate-600 text-sm">
-                        <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An AI assistant designed to accelerate the software development lifecycle.</p></div>
-                        <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>Provides an IDE extension to help with coding issues directly in your editor.</li>
-                                <li>Offers a Command Line Interface (CLI) for building agents, similar to OpenAI Codex.</li>
-                                <li>Interacts with MCP (Multi-platform Control) servers.</li>
-                                <li>Assists with Code Pull Request (PR) reviews and other GitHub actions.</li>
-                                <li>Integrates with the Google Cloud Shell editor.</li>
-                            </ul>
+            <div class="bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 tile-card" onclick="toggleCard(this)">
+                <div class="p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="code_assist.png" alt="Gemini Code Assist" class="card-image w-15 h-15 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 mb-1">Gemini Code Assist</h2>
+                                    <div class="flex flex-wrap gap-2 mb-2">
+                                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full">Extension</span>
+                                        <span class="bg-cyan-100 text-cyan-800 text-xs font-semibold px-2 py-0.5 rounded-full">Code Assistant</span>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">IDE extension of Gemini</p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
-                            <ul class="list-disc list-inside space-y-1 pl-2 mt-1">
-                                <li>It is not yet optimized for working with codebases that span multiple files.</li>
-                            </ul>
+                    </div>
+                    
+                    <div class="card-content mt-3 pt-3 border-t border-slate-100">
+                        <div class="space-y-2 text-slate-600 text-sm">
+                            <div><h3 class="font-semibold text-slate-700">What is it?</h3><p>An AI assistant designed to accelerate the software development lifecycle.</p></div>
+                            <div><h3 class="font-semibold text-slate-700">What it can do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>Provides an IDE extension to help with coding issues directly in your editor.</li>
+                                    <li>Offers a Command Line Interface (CLI) for building agents, similar to OpenAI Codex.</li>
+                                    <li>Interacts with MCP (Multi-platform Control) servers.</li>
+                                    <li>Assists with Code Pull Request (PR) reviews and other GitHub actions.</li>
+                                    <li>Integrates with the Google Cloud Shell editor.</li>
+                                </ul>
+                            </div>
+                            <div><h3 class="font-semibold text-slate-700">What it can't do:</h3>
+                                <ul class="list-disc list-inside space-y-0.5 pl-2 mt-1">
+                                    <li>It is not yet optimized for working with codebases that span multiple files.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
         </div>
     </div>
 
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Toggle the collapsed class (since expanded is now default)
+            content.classList.toggle('collapsed');
+            icon.classList.toggle('rotated');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.tile-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h2').textContent.toLowerCase();
+                const tags = Array.from(card.querySelectorAll('.flex.flex-wrap.gap-2 span')).map(tag => tag.textContent.toLowerCase());
+                const descriptionElement = card.querySelector('p.text-slate-600.text-sm');
+                const description = descriptionElement ? descriptionElement.textContent.toLowerCase() : '';
+                
+                const matchesSearch = title.includes(searchTerm) || 
+                                    tags.some(tag => tag.includes(searchTerm)) ||
+                                    description.includes(searchTerm);
+                
+                if (matchesSearch || searchTerm === '') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
 </body>
-</html>
+</html> 
